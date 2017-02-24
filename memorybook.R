@@ -75,3 +75,19 @@ tidymemorybook_s2 <- list()
 for(i in 1:length(tidymemorybook_s)){
   tidymemorybook_s2[[i]] <- do.call(rbind, tidymemorybook_s[1:i]) 
 }
+
+
+#death
+daydata <- tidymemorybook %>% 
+ group_by(day, month) %>%
+ tally() %>%
+ mutate(month = recode(month, `лютого` = "02", січня = "01" ),
+  date = as.Date( paste0(day,"-",month,"-2015"), format = "%d-%m-%Y" )) %>%
+ ungroup() %>%
+ dplyr::select(date, n) 
+
+daydata <- left_join(dt,daydata ) %>%  
+ arrange(date) %>%
+ mutate(n = ifelse(is.na(n), 0, n)) %>%
+ mutate(n2 = cumsum(n))
+daydata_s <- split(daydata, daydata$date)

@@ -91,6 +91,7 @@ frames[[i]] <- ggplot(data = ukraine2, aes(x = longitude, y = latitude)) +
   geom_text(aes(x = x, y = y, label = text), data = timeline_b, size = 5.5,  position = position_nudge(y = c(-0.165, -0.165,-0.165 ), x = c(-0.46,-0.43,-0.039)), hjust=0, family = "Merriweather") +
   geom_text(aes(label = format(date, "%B %d,\n%Y")), data = data_s[[i]][1,],family = "Andale Mono", x = 37.1, y = 49.55, size = 9 ) +
   geom_point(data = cities, aes(x = lon, y = lat, size = 2*population), shape = 1) +
+  annotate("text", x = 38.7, y = 46.95, label="@MasimovR Data: liveuamap.com/mapdata | memorybook.org.ua", family = "Andale Mono", color="black", size = 4) +
   geom_text(data = cities, aes(x = lon, y = lat, label = city),
             position = position_nudge(y = c(0.1,0.1,0.1,0.1,0.1,0.1,0.1,-0.1,-0.12,0.1,0.1,0.1,0.08,0.1,-0.08,0.1,0.1,0.1,0.11,0.1), x = c(0,0.1,0.25,0,0,0,0,-0.05,0,0,0,0,-0.3,0,0.2,0,-0.1,0,0.02,0)),
             family = "Merriweather",size = 5.5) + 
