@@ -15,7 +15,7 @@ coord <- ggmap::geocode(c(luh, don))
 cities <- cbind(cities, coord) 
 
 #polygon of Azov sea
-polygon <- kml_polygons("https://raw.githubusercontent.com/MasimovAnar/donbassmap/master/MarineRegions-iho.kml")
+azov <- kml_polygons("https://raw.githubusercontent.com/MasimovAnar/donbassmap/master/MarineRegions-iho.kml")
 #polygon of Ukraine
 ukraine <-  kml_polygons("https://raw.githubusercontent.com/MasimovAnar/donbassmap/master/doc.kml")
 ukraine2 <- ukraine %>%
@@ -52,8 +52,8 @@ timeline_b <- timeline %>%
     "Retreat from\nDebaltseve"
   ))
 
-legend <- data.frame(x = c(40.45, 40.45,40.45,40.45), y = c(49.5, 49.3, 49.09, 48.9 ), text = c("Ukraine","Occupied\nterritories", "Donetsk\nAirport", "Place of\ndeath"))
-legend2 <- data.frame(x = c(40.6, 40.8), y = c(48.9, 48.9))
+legend <- data.frame(x = c(40.45, 40.45,40.45,40.45), y = c(49.5+ 0.075, 49.3+ 0.075, 49.09+ 0.075, 48.9 + 0.075), text = c("Ukraine","Occupied\nterritories", "Donetsk\nAirport", "Place of\ndeath"))
+legend2 <- data.frame(x = c(40.6, 40.8), y = c(48.9+ 0.075, 48.9+ 0.075))
 
 png <- tempfile()
 download.file('http://raw.githubusercontent.com/MasimovAnar/donbassmap/master/donetsk.png', png)
@@ -80,6 +80,7 @@ frames <- list()
 for( i in 1:length(l)){
 frames[[i]] <- ggplot(data = ukraine2, aes(x = longitude, y = latitude)) +
   geom_polygon(aes(group = region), fill = "#f0ede5", color = "white", size = 0.8) +
+  geom_polygon(data = azov, aes(x = longitude, y = latitude), fill = "skyblue") + 
   geom_point(data = tidymemorybook_s2[[i]], aes(x = lon, y = lat), col = "red", size = 4, alpha = 0.2, shape = 4) +
   geom_polygon(data = data_s[[i]], aes(x = longitude, y = latitude), fill = "black", alpha = 0.25, size = 0.5) +
   coord_equal(xlim = c(b[1,1], 41), ylim = c(47.05, 50.4)) +
@@ -109,19 +110,23 @@ frames[[i]] <- ggplot(data = ukraine2, aes(x = longitude, y = latitude)) +
         plot.subtitle = element_text(family = "Merriweather", size = 27,hjust = 0.065),
         legend.position = "none",
         plot.margin = margin(15,0,-2,-2.5)) +
-  geom_rect(aes(xmin=40.3, xmax=41.1, ymin=48.55,ymax=49.65),col = "black", alpha=1, fill="white") + 
+  geom_rect(aes(xmin=40.3, xmax=41.1, ymin=48.55+ 0.075,ymax=49.65+ 0.075),col = "black", alpha=1, fill="white") + 
  geom_point(data = legend[1,], aes(x,y), shape = 22, fill = "#f0ede5",stroke = 0, size = 15) +
   geom_text(data = legend[1,], aes(x+0.1,y, label = text),  size = 5, family = "Merriweather", hjust = 0 ) + 
 geom_point(data = legend[2,], aes(x,y), shape = 22, fill = "black", alpha = 0.25, stroke = 0, size = 15) +
   geom_text(data = legend[2,], aes(x+0.1,y, label = text),  size = 5, family = "Merriweather",hjust = 0) +
   geom_text(data = legend[3,], aes(x+0.1,y, label = text),  size = 5, family = "Merriweather",hjust = 0) +
-  annotation_raster(plane, ymin = 49.0,ymax= 49.18,xmin = 40.37,xmax = 40.54) + 
+  annotation_raster(plane, ymin = 49.0+ 0.075,ymax= 49.18+ 0.075,xmin = 40.37,xmax = 40.54) + 
   geom_point(data = legend2[1,], aes(x,y), col = "black", size = 7,stroke = 0.8, shape = 4) +
   geom_point(data = legend2[2,], aes(x,y), col = "red", size = 7, shape = 4) +
-  geom_text(data = data.frame(x = 40.365, y= 48.75), aes(x,y), label = "Place of death of one\nUkrainian soldier",  size = 4.6, family = "Merriweather",hjust = 0) +
+  geom_text(data = data.frame(x = 40.365, y= 48.825), aes(x,y), label = "Place of death of one\nUkrainian soldier",  size = 4.6, family = "Merriweather",hjust = 0) +
   labs( title = "War in Eastern Ukraine", subtitle = "January - February 2015") +
   annotation_custom(grob = ggplotGrob(map), xmin = 39.85, xmax = 41.18, 
-                    ymin = 46.9, ymax = 47.9)
+                    ymin = 46.88, ymax = 47.88) + 
+  annotate("text", x = 40.72, y = 48.4, label="Ukrainian\nsoldiers died:", family = "Andale Mono", color="black", size = 6) +
+  annotate("text", x = 40.72, y = 48.175, label=paste0(daydata_s[[i]]$n2), family = "Andale Mono", color="black", size = 10) +
+  annotate("text", x = 39.05, y = 47.5, label="RUSSIA", family = "Merriweather", color="black", size = 11) 
+
 } 
 
 
